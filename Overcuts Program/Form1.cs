@@ -12,17 +12,39 @@ namespace Overcuts_Program
 {
     public partial class Form1 : Form
     {
+        private ProductStyles product;
+        private Dictionary<string, string> headerColumnNames = new Dictionary<string, string>();
+
+        private void initializeHeaderRows() { 
+            this.headerColumnNames["PRODUCTCODE"] = "Style";
+            this.headerColumnNames["COLORCODE"] = "Color";
+            this.headerColumnNames["SIZE0"] = "0";
+            this.headerColumnNames["SIZE2"] = "2";
+            this.headerColumnNames["SIZE4"] = "4";
+            this.headerColumnNames["SIZE6"] = "6";
+            this.headerColumnNames["SIZE8"] = "8";
+            this.headerColumnNames["SIZE10"] = "10";
+            this.headerColumnNames["SIZE12"] = "12";
+            this.headerColumnNames["SIZE14"] = "14";
+            this.headerColumnNames["SIZE16"] = "16";
+            this.headerColumnNames["SIZE18"] = "18";
+            this.headerColumnNames["SIZE20"] = "20";
+            this.headerColumnNames["BULK"] = "Bulk";
+            this.headerColumnNames["UNITTOTALS"] = "Totals";
+        }
         public Form1()
         {
             InitializeComponent();
-            ProductStyles productStyles = new ProductStyles();
-            DataSet styles = productStyles.getStyles();
+
+            this.initializeHeaderRows();
+            //ProductStyles productStyles = new ProductStyles();
+           // DataSet styles = productStyles.getStyles();
           
-            orderFrom.Format = DateTimePickerFormat.Custom;
+            /*orderFrom.Format = DateTimePickerFormat.Custom;
             orderFrom.CustomFormat = "dd/MM/yyyy";
 
             orderTo.Format = DateTimePickerFormat.Custom;
-            orderTo.CustomFormat = "dd/MM/yyyy";
+            orderTo.CustomFormat = "dd/MM/yyyy";*/
 
            
            
@@ -32,17 +54,28 @@ namespace Overcuts_Program
 
         private void button1_Click(object sender, EventArgs e)
         {
-            string orderFromS = orderFrom.Value.Date.ToString("yyyyMMdd");
-            string orderToS   = orderTo.Value.Date.ToString("yyyyMMdd");
-            int currDate = Int32.Parse(DateTime.Now.ToString("yyyyMMdd"));
-            if(currDate==Int32.Parse(orderFromS) && currDate==Int32.Parse(orderToS) ) {
+            int desiredQuantity = Int32.Parse(unitsInput.Text.ToString());
+            string styleCode   = styleInput.Text.ToString();
+            string colorCode   = colorInput.Text.ToString();
+            string orderFromS  = orderFrom.Value.Date.ToString("yyyyMMdd");
+            string orderToS    = orderTo.Value.Date.ToString("yyyyMMdd");
+            int currDate       = Int32.Parse(DateTime.Now.ToString("yyyyMMdd"));
+
+            if( currDate<=Int32.Parse(orderFromS) ) {
                 orderFromS = "";
+                
+            }
+
+            if ( currDate <= Int32.Parse(orderToS) ) {
                 orderToS = "";
             }
+
+            this.product = new ProductStyles(styleCode,colorCode,desiredQuantity);
             EcommOvercuts ecomm = new EcommOvercuts();
             WholesalesOvercuts wholesale = new WholesalesOvercuts();
-            ecomm.getOvercuts(styleInput.Text.ToString(),colorInput.Text.ToString(),orderFromS,orderToS);
-            wholesale.getOvercuts(styleInput.Text.ToString(), colorInput.Text.ToString(), orderFromS, orderToS);
+
+            ecomm.getOvercuts(styleCode, colorCode, orderFromS, orderToS);
+            wholesale.getOvercuts(styleCode, colorCode, orderFromS, orderToS);
 
             if (!ecomm.noRows)
             {
@@ -67,10 +100,49 @@ namespace Overcuts_Program
             
         }
 
+        private void addTopSizes(TableLayoutPanel tableLayout,int row) {
+            tableLayout.Controls.Add(new Label() { Text = "Style" }, 0, row);
+            tableLayout.Controls.Add(new Label() { Text = "Color" }, 1, row);
+            int columnIndex = 2;
+            foreach (KeyValuePair<string, string> productSize in this.product.getStyleSizes()) {
+                tableLayout.Controls.Add(new Label() { Text = productSize.Value }, columnIndex, row);
+                columnIndex++;
+            }
+            tableLayout.Controls.Add(new Label() { Text = "Totals" }, 14, row);
+        }
+
+        private void addHeaderRow(TableLayoutPanel tableLayout,int row)
+        {
+            int columnIndex = 0;
+            foreach (KeyValuePair<string, string> columnName in this.headerColumnNames)
+            {
+                tableLayout.Controls.Add(new Label() { Text = columnName.Value }, columnIndex, row);
+                columnIndex++;
+            }
+        }
+
+        private void createColumnStyles(TableLayoutPanel tableLayout) {
+            tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 9F));
+            tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 9F));
+            tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F));
+            tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F));
+            tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F));
+            tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F));
+            tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F));
+            tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F));
+            tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F));
+            tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F));
+            tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F));
+            tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F));
+            tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F));
+            tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F));
+            tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F));
+        }
+
         private void drawEcommOvercutsTable(EcommOvercuts overcuts) {
             try
             {
-                int unitsToShip = Int32.Parse(unitsInput.Text.ToString());
+                int desiredQuantity = Int32.Parse(unitsInput.Text.ToString());
                 //label4.Text = unitsToShip.ToString();
                 TableLayoutPanel tableLayoutPanel1 = new TableLayoutPanel();
                 Label ecommLabelTable = new Label();
@@ -85,83 +157,19 @@ namespace Overcuts_Program
 
                 // tableLayoutPanel1
                 tableLayoutPanel1.ColumnCount = 15;
-                tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 9F));
-                tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 9F));
-                tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F));
-                tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F));
-                tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F));
-                tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F));
-                tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F));
-                tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F));
-                tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F));
-                tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F));
-                tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F));
-                tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F));
-                tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F));
-                tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F));
-                tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F));
+                this.createColumnStyles(tableLayoutPanel1);
 
-                // header row
-                tableLayoutPanel1.Controls.Add(new Label() { Text = "Style" }, 0, 0);
-                tableLayoutPanel1.Controls.Add(new Label() { Text = "Color" }, 1, 0);
-                tableLayoutPanel1.Controls.Add(new Label() { Text = "0" }, 2, 0);
-                tableLayoutPanel1.Controls.Add(new Label() { Text = "2" }, 3, 0);
-                tableLayoutPanel1.Controls.Add(new Label() { Text = "4" }, 4, 0);
-                tableLayoutPanel1.Controls.Add(new Label() { Text = "6" }, 5, 0);
-                tableLayoutPanel1.Controls.Add(new Label() { Text = "8" }, 6, 0);
-                tableLayoutPanel1.Controls.Add(new Label() { Text = "10" }, 7, 0);
-                tableLayoutPanel1.Controls.Add(new Label() { Text = "12" }, 8, 0);
-                tableLayoutPanel1.Controls.Add(new Label() { Text = "14" }, 9, 0);
-                tableLayoutPanel1.Controls.Add(new Label() { Text = "16" }, 10, 0);
-                tableLayoutPanel1.Controls.Add(new Label() { Text = "18" }, 11, 0);
-                tableLayoutPanel1.Controls.Add(new Label() { Text = "20" }, 12, 0);
-                tableLayoutPanel1.Controls.Add(new Label() { Text = "Bulk" }, 13, 0);
-                tableLayoutPanel1.Controls.Add(new Label() { Text = "Totals" }, 14, 0);
+                // SIZES ROW
+                this.addTopSizes(tableLayoutPanel1,0);
 
+                // HEADER ROW
+                //this.addHeaderRow(tableLayoutPanel1,1);
+                
                 // RETURNED VALUES ROW
-                tableLayoutPanel1.Controls.Add(new Label() { Text = overcuts.overcutvalues["PRODUCTCODE"] }, 0, 1);
-                tableLayoutPanel1.Controls.Add(new Label() { Text = overcuts.overcutvalues["COLORCODE"] }, 1, 1);
-                var colIndex = 2;
-                for (int index = 0; index <= 22; index += 2)
-                {
-                    string sizekey = "";
-                    if (index < 22)
-                    {
-                        sizekey += "SIZE" + index;
-                    }
-                    else
-                    {
-                        sizekey += "BULK";
-                    }
-                    tableLayoutPanel1.Controls.Add(new Label() { Text = overcuts.overcutvalues[sizekey] }, colIndex++, 1);
-                }
-                tableLayoutPanel1.Controls.Add(new Label() { Text = overcuts.overcutvalues["UNITSTOTAL"] }, 14, 1);
-
-                tableLayoutPanel1.Controls.Add(new Label() { Text = "Estimation" }, 0, 2);
-                tableLayoutPanel1.Controls.Add(new Label() { Text = "" }, 1, 2);
-                colIndex = 2;
-                for (int index = 0; index <= 22; index += 2)
-                {
-                    string sizekey = "";
-                    if (index < 22)
-                    {
-                        sizekey += "SIZE" + index;
-                    }
-                    else
-                    {
-                        sizekey += "BULK";
-                    }
-
-
-                    double percentage = (double)overcuts.unitsBySize[sizekey] / (double)overcuts.totalUnits;
-
-                    int estimatedSizeQuantity = (int)(percentage * (double)unitsToShip);
-
-                    tableLayoutPanel1.Controls.Add(new Label() { Text = estimatedSizeQuantity.ToString() }, colIndex++, 2);
-
-                }
-
-                tableLayoutPanel1.Controls.Add(new Label() { Text = unitsToShip.ToString() }, 14, 2);
+                overcuts.setTableLayoutSizes(tableLayoutPanel1,1);
+              
+                // ESTIMATION VALUE ROW
+                overcuts.setTableLayoutEstimateSizes(tableLayoutPanel1,desiredQuantity,2);
 
                 tableLayoutPanel1.Location = new System.Drawing.Point(49, 130);
                 tableLayoutPanel1.Name = "ecommOvercutPanel";
@@ -172,10 +180,6 @@ namespace Overcuts_Program
                 tableLayoutPanel1.Size = new System.Drawing.Size(688, 90);
                 tableLayoutPanel1.TabIndex = 0;
                 //tableLayoutPanel1.CellPaint += new TableLayoutCellPaintEventHandler(tableLayoutPanel1_CellPaint);
-
-
-
-
 
                 Controls.Add(tableLayoutPanel1);
                 tableLayoutPanel1.ResumeLayout(false);
@@ -192,9 +196,8 @@ namespace Overcuts_Program
         {
             try
             {
-                int unitsToShip = Int32.Parse(unitsInput.Text.ToString());
-                //label4.Text = unitsToShip.ToString();
-                TableLayoutPanel tableLayoutPanel1 = new TableLayoutPanel();
+                int desiredQuantity = Int32.Parse(unitsInput.Text.ToString());
+
                 Label ecommLabelTable = new Label();
                 ecommLabelTable.Text = "Wholesale";
                 ecommLabelTable.Name = "wholesaleOvercutLabel";
@@ -202,88 +205,26 @@ namespace Overcuts_Program
                 ecommLabelTable.Font = new Font("Arial", 18, FontStyle.Bold);
                 ecommLabelTable.AutoSize = true;
                 Controls.Add(ecommLabelTable);
+
+                TableLayoutPanel tableLayoutPanel1 = new TableLayoutPanel();
                 tableLayoutPanel1.SuspendLayout();
 
 
                 // tableLayoutPanel1
                 tableLayoutPanel1.ColumnCount = 15;
-                tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 9F));
-                tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 9F));
-                tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F));
-                tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F));
-                tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F));
-                tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F));
-                tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F));
-                tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F));
-                tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F));
-                tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F));
-                tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F));
-                tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F));
-                tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F));
-                tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F));
-                tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F));
+                this.createColumnStyles(tableLayoutPanel1);
 
-                // header row
-                tableLayoutPanel1.Controls.Add(new Label() { Text = "Style" }, 0, 0);
-                tableLayoutPanel1.Controls.Add(new Label() { Text = "Color" }, 1, 0);
-                tableLayoutPanel1.Controls.Add(new Label() { Text = "0" }, 2, 0);
-                tableLayoutPanel1.Controls.Add(new Label() { Text = "2" }, 3, 0);
-                tableLayoutPanel1.Controls.Add(new Label() { Text = "4" }, 4, 0);
-                tableLayoutPanel1.Controls.Add(new Label() { Text = "6" }, 5, 0);
-                tableLayoutPanel1.Controls.Add(new Label() { Text = "8" }, 6, 0);
-                tableLayoutPanel1.Controls.Add(new Label() { Text = "10" }, 7, 0);
-                tableLayoutPanel1.Controls.Add(new Label() { Text = "12" }, 8, 0);
-                tableLayoutPanel1.Controls.Add(new Label() { Text = "14" }, 9, 0);
-                tableLayoutPanel1.Controls.Add(new Label() { Text = "16" }, 10, 0);
-                tableLayoutPanel1.Controls.Add(new Label() { Text = "18" }, 11, 0);
-                tableLayoutPanel1.Controls.Add(new Label() { Text = "20" }, 12, 0);
-                tableLayoutPanel1.Controls.Add(new Label() { Text = "Bulk" }, 13, 0);
-                tableLayoutPanel1.Controls.Add(new Label() { Text = "Totals" }, 14, 0);
+                // SIZES ROW
+                this.addTopSizes(tableLayoutPanel1, 0);
+
+                // HEADER ROW
+                //this.addHeaderRow(tableLayoutPanel1, 1);
 
                 // RETURNED VALUES ROW
-                tableLayoutPanel1.Controls.Add(new Label() { Text = overcuts.overcutvalues["PRODUCTCODE"] }, 0, 1);
-                tableLayoutPanel1.Controls.Add(new Label() { Text = overcuts.overcutvalues["COLORCODE"] }, 1, 1);
-                var colIndex = 2;
-                for (int index = 0; index <= 22; index += 2)
-                {
-                    string sizekey = "";
-                    if (index < 22)
-                    {
-                        sizekey += "SIZE" + index;
-                    }
-                    else
-                    {
-                        sizekey += "BULK";
-                    }
-                    tableLayoutPanel1.Controls.Add(new Label() { Text = overcuts.overcutvalues[sizekey] }, colIndex++, 1);
-                }
-                tableLayoutPanel1.Controls.Add(new Label() { Text = overcuts.overcutvalues["UNITSTOTAL"] }, 14, 1);
+                overcuts.setTableLayoutSizes(tableLayoutPanel1, 1);
 
-                tableLayoutPanel1.Controls.Add(new Label() { Text = "Estimation" }, 0, 2);
-                tableLayoutPanel1.Controls.Add(new Label() { Text = "" }, 1, 2);
-                colIndex = 2;
-                for (int index = 0; index <= 22; index += 2)
-                {
-                    string sizekey = "";
-                    if (index < 22)
-                    {
-                        sizekey += "SIZE" + index;
-                    }
-                    else
-                    {
-                        sizekey += "BULK";
-                    }
-
-
-                    double percentage = (double)overcuts.unitsBySize[sizekey] / (double)overcuts.totalUnits;
-
-                    int estimatedSizeQuantity = (int)(percentage * (double)unitsToShip);
-
-                    tableLayoutPanel1.Controls.Add(new Label() { Text = estimatedSizeQuantity.ToString() }, colIndex++, 2);
-
-                }
-
-                tableLayoutPanel1.Controls.Add(new Label() { Text = unitsToShip.ToString() }, 14, 2);
+                // ESTIMATION VALUE ROW
+                overcuts.setTableLayoutEstimateSizes(tableLayoutPanel1, desiredQuantity, 2);
 
                 tableLayoutPanel1.Location = new System.Drawing.Point(49, 280);
                 tableLayoutPanel1.Name = "wholesaleOvercutPanel";
@@ -294,10 +235,6 @@ namespace Overcuts_Program
                 tableLayoutPanel1.Size = new System.Drawing.Size(688, 90);
                 tableLayoutPanel1.TabIndex = 0;
                 //tableLayoutPanel1.CellPaint += new TableLayoutCellPaintEventHandler(tableLayoutPanel1_CellPaint);
-
-
-
-
 
                 Controls.Add(tableLayoutPanel1);
                 tableLayoutPanel1.ResumeLayout(false);

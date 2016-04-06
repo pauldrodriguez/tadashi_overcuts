@@ -110,5 +110,41 @@ namespace Overcuts_Program
             query += " GROUP BY A.PRCD5Z,A.CRCD5Z";
             return query;
         }
+
+        public void setTableLayoutSizes(TableLayoutPanel tableLayout, int row)
+        {
+            int columnIndex = 0;
+            foreach (KeyValuePair<string, string> product in this.overcutvalues)
+            {
+                tableLayout.Controls.Add(new Label() { Text = product.Value }, columnIndex++, row);
+            }
+        }
+
+        public void setTableLayoutEstimateSizes(TableLayoutPanel tableLayout, int desiredQuantity, int row)
+        {
+            int colIndex = 0;
+            tableLayout.Controls.Add(new Label() { Text = "Estimation" }, colIndex++, row);
+            tableLayout.Controls.Add(new Label() { Text = "" }, colIndex++, row);
+            for (int index = 0; index <= 22; index += 2)
+            {
+                string sizekey = "";
+                if (index < 22)
+                {
+                    sizekey += "SIZE" + index;
+                }
+                else
+                {
+                    sizekey += "BULK";
+                }
+                double percentage = (double)this.unitsBySize[sizekey] / (double)this.totalUnits;
+
+                int estimatedSizeQuantity = (int)(percentage * (double)desiredQuantity);
+
+                tableLayout.Controls.Add(new Label() { Text = estimatedSizeQuantity.ToString() }, colIndex++, row);
+
+            }
+            tableLayout.Controls.Add(new Label() { Text = desiredQuantity.ToString() }, colIndex, row);
+        }
+
     }
 }
