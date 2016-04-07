@@ -11,18 +11,25 @@ using System.Windows.Forms;
 
 namespace Overcuts_Program
 {
-    class RetailOvercuts
+    class RetailOvercuts : Overcuts
     {
         const String databaseConnection = "Data Source=10.1.1.20;Initial Catalog=TadashiPOS;User ID=sa;Password=B1llyg0@t5";
 
         //public Dictionary<string, string> overcutvalues = new Dictionary<string, string>();
         public Dictionary<string, int> qtySoldPerSize = new Dictionary<string, int>();
 
-        public int totalUnits = 0;
+       
 
-        public bool noRows = true;
+       // public bool noRows = true;
 
-        public void getOvercuts(String productCode, String colorCode, String orderFrom = "", String orderTo = "")
+        public RetailOvercuts()
+        {
+            this.labelText = "Retail";
+            this.labelName = "retailOvercutLabel";
+            this.tableName = "retailOvercutPanel";
+        }
+
+        public override void getOvercuts(String productCode, String colorCode, String orderFrom = "", String orderTo = "")
         {
             String query = buildQuery(productCode, colorCode, orderFrom, orderTo);
 
@@ -87,9 +94,10 @@ namespace Overcuts_Program
             return query;
         }
 
-        public void setTableLayoutSizes(TableLayoutPanel tableLayout, int row,ProductStyles product)
+        public override void setTableLayoutSizes(TableLayoutPanel tableLayout)
         {
-     
+         
+            ProductStyles product = Overcuts.product;
             int columnIndex = 0;
             tableLayout.Controls.Add(new Label() { Text = product.getStyleCode() }, columnIndex++, row);
             tableLayout.Controls.Add(new Label() { Text = product.getColorCode() }, columnIndex++, row);
@@ -106,8 +114,11 @@ namespace Overcuts_Program
             
         }
 
-        public void setTableLayoutEstimateSizes(TableLayoutPanel tableLayout, int desiredQuantity, int row,ProductStyles product)
+        public override void setTableLayoutEstimateSizes(TableLayoutPanel tableLayout)
         {
+            int desiredQuantity = Overcuts.product.getDesiredQuantity();
+    
+            ProductStyles product = Overcuts.product;
             int columnIndex = 0;
             tableLayout.Controls.Add(new Label() { Text = "Estimation" }, columnIndex++, row);
             tableLayout.Controls.Add(new Label() { Text = "" }, columnIndex++, row);

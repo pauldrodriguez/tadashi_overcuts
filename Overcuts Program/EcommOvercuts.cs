@@ -11,19 +11,27 @@ using System.Windows.Forms;
 
 namespace Overcuts_Program
 {
-    class EcommOvercuts
+    class EcommOvercuts: Overcuts
     {
         const String as400conn = "Provider=IBMDA400.1;Data Source=10.1.1.10;User ID=PAULR;Password=PAULR;Default Collection=VPSFILES";
        
         public Dictionary<string, string> overcutvalues = new Dictionary<string, string>();
         public Dictionary<string, int> unitsBySize = new Dictionary<string, int>();
 
-        public int totalUnits;
+        // public int totalUnits;
       
-        public bool noRows = true;
-        public void getOvercuts(String productCode,String colorCode, String orderFrom="", String orderTo="") {
-         
-            String query = buildQueryInvoice(productCode,colorCode,orderFrom,orderTo);
+        //public bool noRows = true;
+
+        public EcommOvercuts()
+        {
+            this.labelText = "E-Commerce";
+            this.labelName = "ecommOvercutLabel";
+            this.tableName = "ecommOvercutPanel";
+        }
+
+        public override void getOvercuts(String productCode,String colorCode, String orderFrom="", String orderTo="") {
+
+            String query = buildQueryInvoice(productCode, colorCode, orderFrom, orderTo);
             try
             {
                 using (OleDbConnection conn = new OleDbConnection(as400conn))
@@ -72,12 +80,12 @@ namespace Overcuts_Program
 
         private String buildQueryOrder(String productCode, String colorCode, String orderFrom = "", String orderTo = "")
         {
-            String query = "SELECT A.PRCD4D AS PRODUCTCODE,A.CRCD4D AS COLORCODE," +
-           "SUM(A.SZ014D) AS SIZE0,SUM(A.SZ024D) AS SIZE2,SUM(A.SZ034D) AS SIZE4,SUM(A.SZ044D) AS SIZE6,SUM(A.SZ054D) AS SIZE8,SUM(A.SZ064D) AS SIZE10," +
-           "SUM(A.SZ074D) AS SIZE12,SUM(A.SZ084D) AS SIZE14,SUM(A.SZ094D) AS SIZE16,SUM(A.SZ104D) AS SIZE18,SUM(A.SZ114D) AS SIZE20,SUM(A.SZ124D) AS BULK," +
-           "SUM(A.UNIT4D) AS UNITSTOTAL " +
-           "FROM ORDDTL0 AS A LEFT JOIN ORDHDR0 AS B ON A.CONO4D=B.CONO2Y AND A.CSNO4D=B.CSNO2Y AND A.ORNO4D = B.ORNO2Y " +
-           "WHERE A.CONO4D=1 AND A.CSNO4D=777 AND A.PRCD4D='" + productCode.ToUpper() + "' AND A.CRCD4D='" + colorCode.ToUpper() + "'";
+            String query = "SELECT A.PRCD4E AS PRODUCTCODE,A.CRCD4E AS COLORCODE," +
+           "SUM(A.SZ014E) AS SIZE0,SUM(A.SZ024E) AS SIZE2,SUM(A.SZ034E) AS SIZE4,SUM(A.SZ044E) AS SIZE6,SUM(A.SZ054E) AS SIZE8,SUM(A.SZ064E) AS SIZE10," +
+           "SUM(A.SZ074E) AS SIZE12,SUM(A.SZ084E) AS SIZE14,SUM(A.SZ094E) AS SIZE16,SUM(A.SZ104E) AS SIZE18,SUM(A.SZ114E) AS SIZE20,SUM(A.SZ124E) AS BULK," +
+           "SUM(A.UNIT4E) AS UNITSTOTAL " +
+           "FROM ORDDTL0 AS A LEFT JOIN ORDHDR0 AS B ON A.CONO4E=B.CONO2Y AND A.CSNO4E=B.CSNO2Y AND A.ORNO4E = B.ORNO2Y " +
+           "WHERE A.CONO4E=1 AND A.CSNO4E=777 AND A.PRCD4E='" + productCode.ToUpper() + "' AND A.CRCD4E='" + colorCode.ToUpper() + "'";
             if (orderFrom != "")
             {
                 query += " AND B.ORDT2Y>=" + orderFrom;
@@ -86,7 +94,7 @@ namespace Overcuts_Program
             {
                 query += " AND B.ORDT2Y<=" + orderTo;
             }
-            query += " GROUP BY A.PRCD4D,A.CRCD4D";
+            query += " GROUP BY A.PRCD4E,A.CRCD4E";
 
             return query;
         }
@@ -111,15 +119,19 @@ namespace Overcuts_Program
             return query;
         }
 
-        public void setTableLayoutSizes(TableLayoutPanel tableLayout,int row) {
+        public override void setTableLayoutSizes(TableLayoutPanel tableLayout)
+        {
+          
             int columnIndex = 0;
             foreach(KeyValuePair<string, string> product in this.overcutvalues) {
                 tableLayout.Controls.Add(new Label() { Text = product.Value}, columnIndex++, row);
             }
         }
 
-        public void setTableLayoutEstimateSizes(TableLayoutPanel tableLayout, int desiredQuantity, int row)
+        public override void setTableLayoutEstimateSizes(TableLayoutPanel tableLayout)
         {
+     
+            int desiredQuantity = Overcuts.product.getDesiredQuantity();
             int colIndex = 0;
             tableLayout.Controls.Add(new Label() { Text = "Estimation" }, colIndex++, row);
             tableLayout.Controls.Add(new Label() { Text = "" }, colIndex++, row);

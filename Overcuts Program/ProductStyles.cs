@@ -36,6 +36,10 @@ namespace Overcuts_Program
             return colorCode;
         }
 
+        public int getDesiredQuantity() {
+            return this.desiredQuantity;
+        }
+
         public static DataSet getStyles()
         {
             DataSet dt = new DataSet();
