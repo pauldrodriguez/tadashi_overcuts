@@ -54,6 +54,7 @@
     <Compile Include="ProductStyles.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RetailOvercuts.cs" />
     <Compile Include="sqlConnections.cs" />
     <Compile Include="WholesalesOvercuts.cs" />
     <EmbeddedResource Include="Form1.resx">

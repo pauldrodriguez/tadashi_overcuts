@@ -28,6 +28,14 @@ namespace Overcuts_Program
             this.fetchStyleSizes();
         }
 
+        public string getStyleCode() {
+            return styleCode;
+        }
+
+        public string getColorCode() {
+            return colorCode;
+        }
+
         public static DataSet getStyles()
         {
             DataSet dt = new DataSet();

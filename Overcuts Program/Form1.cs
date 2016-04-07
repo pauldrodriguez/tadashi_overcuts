@@ -61,21 +61,29 @@ namespace Overcuts_Program
             string orderToS    = orderTo.Value.Date.ToString("yyyyMMdd");
             int currDate       = Int32.Parse(DateTime.Now.ToString("yyyyMMdd"));
 
+            string orderFromDate = orderFrom.Value.Date.ToString("yyyy-MM-dd");
+            string orderToDate = orderFrom.Value.Date.ToString("yyyy-MM-dd");
+
             if( currDate<=Int32.Parse(orderFromS) ) {
                 orderFromS = "";
+                orderFromDate = "";
                 
             }
 
             if ( currDate <= Int32.Parse(orderToS) ) {
                 orderToS = "";
+                orderToDate = "";
             }
 
             this.product = new ProductStyles(styleCode,colorCode,desiredQuantity);
+
             EcommOvercuts ecomm = new EcommOvercuts();
             WholesalesOvercuts wholesale = new WholesalesOvercuts();
+            RetailOvercuts retail = new RetailOvercuts();
 
             ecomm.getOvercuts(styleCode, colorCode, orderFromS, orderToS);
             wholesale.getOvercuts(styleCode, colorCode, orderFromS, orderToS);
+            retail.getOvercuts(styleCode, colorCode, orderFromDate, orderToDate);
 
             if (!ecomm.noRows)
             {
@@ -87,6 +95,12 @@ namespace Overcuts_Program
                 removePanel("wholesaleOvercutPanel","wholesaleOvercutLabel");
                 drawWholesaleOvercutsTable(wholesale);
             }
+
+            //if (!retail.noRows)
+            //{
+                removePanel("retailOvercutPanel", "retailOvercutLabel");
+                drawRetailOvercutsTable(retail);
+            //}
         }
 
         public void removePanel(string panelName,string panelLabelName) {
@@ -196,12 +210,15 @@ namespace Overcuts_Program
         {
             try
             {
+                int xPos = 49;
+                int yPos = 390;
+
                 int desiredQuantity = Int32.Parse(unitsInput.Text.ToString());
 
                 Label ecommLabelTable = new Label();
                 ecommLabelTable.Text = "Wholesale";
                 ecommLabelTable.Name = "wholesaleOvercutLabel";
-                ecommLabelTable.Location = new System.Drawing.Point(49, 240);
+                ecommLabelTable.Location = new System.Drawing.Point(xPos, yPos);
                 ecommLabelTable.Font = new Font("Arial", 18, FontStyle.Bold);
                 ecommLabelTable.AutoSize = true;
                 Controls.Add(ecommLabelTable);
@@ -209,6 +226,7 @@ namespace Overcuts_Program
                 TableLayoutPanel tableLayoutPanel1 = new TableLayoutPanel();
                 tableLayoutPanel1.SuspendLayout();
 
+                yPos += 40;
 
                 // tableLayoutPanel1
                 tableLayoutPanel1.ColumnCount = 15;
@@ -226,8 +244,65 @@ namespace Overcuts_Program
                 // ESTIMATION VALUE ROW
                 overcuts.setTableLayoutEstimateSizes(tableLayoutPanel1, desiredQuantity, 2);
 
-                tableLayoutPanel1.Location = new System.Drawing.Point(49, 280);
+                tableLayoutPanel1.Location = new System.Drawing.Point(xPos, yPos);
                 tableLayoutPanel1.Name = "wholesaleOvercutPanel";
+                tableLayoutPanel1.RowCount = 3;
+                tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 40F));
+                tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 30F));
+                tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 30F));
+                tableLayoutPanel1.Size = new System.Drawing.Size(688, 90);
+                tableLayoutPanel1.TabIndex = 0;
+                //tableLayoutPanel1.CellPaint += new TableLayoutCellPaintEventHandler(tableLayoutPanel1_CellPaint);
+
+                Controls.Add(tableLayoutPanel1);
+                tableLayoutPanel1.ResumeLayout(false);
+                tableLayoutPanel1.PerformLayout();
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.ToString());
+            }
+
+        }
+
+        private void drawRetailOvercutsTable(RetailOvercuts overcuts)
+        {
+            try
+            {
+                int xPos = 49;
+                int yPos = 390;
+                int desiredQuantity = Int32.Parse(unitsInput.Text.ToString());
+                //label4.Text = unitsToShip.ToString();
+                TableLayoutPanel tableLayoutPanel1 = new TableLayoutPanel();
+                Label ecommLabelTable = new Label();
+                ecommLabelTable.Text = "Retail";
+                ecommLabelTable.Name = "retailOvercutLabel";
+                ecommLabelTable.Location = new System.Drawing.Point(xPos, yPos);
+                ecommLabelTable.Font = new Font("Arial", 18, FontStyle.Bold);
+                ecommLabelTable.AutoSize = true;
+                Controls.Add(ecommLabelTable);
+                tableLayoutPanel1.SuspendLayout();
+
+                yPos += 40;
+
+                // tableLayoutPanel1
+                tableLayoutPanel1.ColumnCount = 15;
+                this.createColumnStyles(tableLayoutPanel1);
+
+                // SIZES ROW
+                this.addTopSizes(tableLayoutPanel1, 0);
+
+                // HEADER ROW
+                //this.addHeaderRow(tableLayoutPanel1,1);
+
+                // RETURNED VALUES ROW
+                overcuts.setTableLayoutSizes(tableLayoutPanel1, 1,this.product);
+
+                // ESTIMATION VALUE ROW
+                overcuts.setTableLayoutEstimateSizes(tableLayoutPanel1, desiredQuantity, 2,this.product);
+
+                tableLayoutPanel1.Location = new System.Drawing.Point(xPos, yPos);
+                tableLayoutPanel1.Name = "retailOvercutPanel";
                 tableLayoutPanel1.RowCount = 3;
                 tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 40F));
                 tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 30F));
