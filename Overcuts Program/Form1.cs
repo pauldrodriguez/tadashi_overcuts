@@ -85,22 +85,27 @@ namespace Overcuts_Program
             wholesale.getOvercuts(styleCode, colorCode, orderFromS, orderToS);
             retail.getOvercuts(styleCode, colorCode, orderFromDate, orderToDate);
 
+            int xPos = 49;
+            int yPos = 90;
+
             if (!ecomm.noRows)
             {
                 removePanel("ecommOvercutPanel","ecommOvercutLabel");
-                drawEcommOvercutsTable(ecomm);
+                drawEcommOvercutsTable(ecomm,ref xPos,ref yPos);
             }
 
             if(!wholesale.noRows) {
+                yPos += 110;
                 removePanel("wholesaleOvercutPanel","wholesaleOvercutLabel");
-                drawWholesaleOvercutsTable(wholesale);
+                drawWholesaleOvercutsTable(wholesale,ref xPos, ref yPos);
             }
 
-            //if (!retail.noRows)
-            //{
+            if (!retail.noRows)
+            {
+                yPos += 110;
                 removePanel("retailOvercutPanel", "retailOvercutLabel");
-                drawRetailOvercutsTable(retail);
-            //}
+                drawRetailOvercutsTable(retail, ref xPos, ref yPos);
+            }
         }
 
         public void removePanel(string panelName,string panelLabelName) {
@@ -153,21 +158,24 @@ namespace Overcuts_Program
             tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F));
         }
 
-        private void drawEcommOvercutsTable(EcommOvercuts overcuts) {
+        private void drawEcommOvercutsTable(EcommOvercuts overcuts, ref int xPos, ref int yPos) {
             try
             {
                 int desiredQuantity = Int32.Parse(unitsInput.Text.ToString());
                 //label4.Text = unitsToShip.ToString();
-                TableLayoutPanel tableLayoutPanel1 = new TableLayoutPanel();
+                
                 Label ecommLabelTable = new Label();
                 ecommLabelTable.Text = "E-Commerce";
                 ecommLabelTable.Name = "ecommOvercutLabel";
-                ecommLabelTable.Location = new System.Drawing.Point(49, 90);
+                ecommLabelTable.Location = new System.Drawing.Point(xPos, yPos);
                 ecommLabelTable.Font = new Font("Arial", 18, FontStyle.Bold);
                 ecommLabelTable.AutoSize = true;
                 Controls.Add(ecommLabelTable);
+
+                TableLayoutPanel tableLayoutPanel1 = new TableLayoutPanel();
                 tableLayoutPanel1.SuspendLayout();
 
+                yPos += 40;
 
                 // tableLayoutPanel1
                 tableLayoutPanel1.ColumnCount = 15;
@@ -185,7 +193,7 @@ namespace Overcuts_Program
                 // ESTIMATION VALUE ROW
                 overcuts.setTableLayoutEstimateSizes(tableLayoutPanel1,desiredQuantity,2);
 
-                tableLayoutPanel1.Location = new System.Drawing.Point(49, 130);
+                tableLayoutPanel1.Location = new System.Drawing.Point(xPos, yPos);
                 tableLayoutPanel1.Name = "ecommOvercutPanel";
                 tableLayoutPanel1.RowCount = 3;
                 tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 40F));
@@ -206,12 +214,11 @@ namespace Overcuts_Program
         }
 
 
-        private void drawWholesaleOvercutsTable(WholesalesOvercuts overcuts)
+        private void drawWholesaleOvercutsTable(WholesalesOvercuts overcuts, ref int xPos, ref int yPos)
         {
             try
             {
-                int xPos = 49;
-                int yPos = 390;
+              
 
                 int desiredQuantity = Int32.Parse(unitsInput.Text.ToString());
 
@@ -265,12 +272,11 @@ namespace Overcuts_Program
 
         }
 
-        private void drawRetailOvercutsTable(RetailOvercuts overcuts)
+        private void drawRetailOvercutsTable(RetailOvercuts overcuts, ref int xPos, ref int yPos)
         {
             try
             {
-                int xPos = 49;
-                int yPos = 390;
+             
                 int desiredQuantity = Int32.Parse(unitsInput.Text.ToString());
                 //label4.Text = unitsToShip.ToString();
                 TableLayoutPanel tableLayoutPanel1 = new TableLayoutPanel();
