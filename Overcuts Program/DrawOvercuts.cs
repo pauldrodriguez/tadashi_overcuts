@@ -27,7 +27,7 @@ namespace Overcuts_Program
             this.form = form;
             this.xPos = 49;
             this.yPos = 90;
-            this.tableWidth = 700;
+            this.tableWidth = 800;
             this.tableHeight = 90;
             this.tableOffset = 20;
         }
@@ -67,15 +67,15 @@ namespace Overcuts_Program
         {
             int row = 0;
             int columnIndex = 0;
-            tableLayout.Controls.Add(new Label() { Text = "Style" }, columnIndex++, row);
-            tableLayout.Controls.Add(new Label() { Text = "Color" }, columnIndex++, row);
+            tableLayout.Controls.Add(new Label() { Text = "Style", Dock = DockStyle.Fill, Anchor = AnchorStyles.None, TextAlign = ContentAlignment.MiddleCenter }, columnIndex++, row);
+            tableLayout.Controls.Add(new Label() { Text = "Color", Dock = DockStyle.Fill, Anchor = AnchorStyles.None, TextAlign = ContentAlignment.MiddleCenter }, columnIndex++, row);
             
            
             foreach (KeyValuePair<string, string> productSize in Overcuts.getProduct().getStyleSizes())
             {
-                tableLayout.Controls.Add(new Label() { Text = productSize.Value }, columnIndex++, row);
+                tableLayout.Controls.Add(new Label() { Text = productSize.Value, Dock = DockStyle.Fill,Anchor=AnchorStyles.None,TextAlign=ContentAlignment.MiddleCenter }, columnIndex++, row);
             }
-            tableLayout.Controls.Add(new Label() { Text = "Totals" }, columnIndex, row);
+            tableLayout.Controls.Add(new Label() { Text = "Totals", Dock = DockStyle.Fill, Anchor = AnchorStyles.None, TextAlign = ContentAlignment.MiddleCenter }, columnIndex, row);
         }
 
         public DrawOvercuts drawOvercuts(Overcuts overcut) {
@@ -112,6 +112,7 @@ namespace Overcuts_Program
                
                 tableLayoutPanel1.Size = new System.Drawing.Size(this.tableWidth, this.tableHeight);
                 tableLayoutPanel1.TabIndex = 0;
+                tableLayoutPanel1.CellPaint += this.tableLayoutPanel1_CellPaint;
            
                 this.form.Controls.Add(tableLayoutPanel1);
                 tableLayoutPanel1.ResumeLayout(false);
@@ -124,6 +125,43 @@ namespace Overcuts_Program
                 MessageBox.Show(e.ToString());
             }
             return this;
+        }
+
+        void tableLayoutPanel1_CellPaint(object sender, TableLayoutCellPaintEventArgs e)
+        {
+            if (e.Row == 0)
+            {
+                var rectangle = e.CellBounds;
+                //rectangle.Inflate(-1, -1);
+                if (e.Column < 14)
+                {
+                    ControlPaint.DrawBorder(e.Graphics, rectangle, Color.Black, 2, ButtonBorderStyle.Solid, Color.Black, 2, ButtonBorderStyle.Solid, Color.Black, 2, ButtonBorderStyle.None, Color.Black, 2, ButtonBorderStyle.Solid);
+                }
+                else {
+                    ControlPaint.DrawBorder(e.Graphics, rectangle, Color.Black, 2, ButtonBorderStyle.Solid, Color.Black, 2, ButtonBorderStyle.Solid, Color.Black, 2, ButtonBorderStyle.Solid, Color.Black, 2, ButtonBorderStyle.Solid);
+                }
+                //ControlPaint.DrawBorder3D(e.Graphics, rectangle, Border3DStyle.Raised, Border3DSide.All); // 3D border
+            }
+            if (e.Row == 1) {
+                var rectangle = e.CellBounds;
+
+                ControlPaint.DrawBorder(e.Graphics, rectangle, Color.RoyalBlue, 2, ButtonBorderStyle.None, Color.RoyalBlue, 2, ButtonBorderStyle.None, Color.RoyalBlue, 2, ButtonBorderStyle.None, Color.RoyalBlue, 2, ButtonBorderStyle.Solid);
+                
+            }
+            if (e.Row == 2) {
+                var rectangle = e.CellBounds;
+
+                ControlPaint.DrawBorder(e.Graphics, rectangle, Color.RoyalBlue, 2, ButtonBorderStyle.None, Color.RoyalBlue, 2, ButtonBorderStyle.None, Color.RoyalBlue, 2, ButtonBorderStyle.None, Color.RoyalBlue, 2, ButtonBorderStyle.Solid);
+                
+            }
+            /*else if (e.Column == 1 && e.Row == 0)
+            {
+                var rectangle = e.CellBounds;
+                rectangle.Inflate(-1, -1);
+
+                ControlPaint.DrawBorder(e.Graphics, rectangle, Color.Red, ButtonBorderStyle.Dotted); // dotted border
+
+            }*/
         }
     }
 }

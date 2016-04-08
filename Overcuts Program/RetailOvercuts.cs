@@ -104,18 +104,18 @@ namespace Overcuts_Program
          
             ProductStyles product = Overcuts.product;
             int columnIndex = 0;
-            tableLayout.Controls.Add(new Label() { Text = product.getStyleCode() }, columnIndex++, row);
-            tableLayout.Controls.Add(new Label() { Text = product.getColorCode() }, columnIndex++, row);
+            tableLayout.Controls.Add(new Label() { Text = product.getStyleCode(), Dock = DockStyle.Fill, Anchor = AnchorStyles.None, TextAlign = ContentAlignment.MiddleCenter }, columnIndex++, row);
+            tableLayout.Controls.Add(new Label() { Text = product.getColorCode(), Dock = DockStyle.Fill, Anchor = AnchorStyles.None, TextAlign = ContentAlignment.MiddleCenter }, columnIndex++, row);
 
             foreach (KeyValuePair<string, string> productSize in product.getStyleSizes())
             {
                 int sizeQty = 0;
                 this.qtySoldPerSize.TryGetValue(productSize.Value.ToUpper(), out sizeQty);
-                
-                tableLayout.Controls.Add(new Label() { Text = sizeQty.ToString() }, columnIndex++, row);
+
+                tableLayout.Controls.Add(new Label() { Text = sizeQty.ToString(), Dock = DockStyle.Fill, Anchor = AnchorStyles.None, TextAlign = ContentAlignment.MiddleCenter }, columnIndex++, row);
             }
 
-            tableLayout.Controls.Add(new Label() { Text = this.totalUnits.ToString()}, columnIndex, row);
+            tableLayout.Controls.Add(new Label() { Text = this.totalUnits.ToString(), Dock = DockStyle.Fill, Anchor = AnchorStyles.None, TextAlign = ContentAlignment.MiddleCenter }, columnIndex, row);
             
         }
 
@@ -125,7 +125,7 @@ namespace Overcuts_Program
     
             ProductStyles product = Overcuts.product;
             int columnIndex = 0;
-            tableLayout.Controls.Add(new Label() { Text = "Estimation" }, columnIndex++, row);
+            tableLayout.Controls.Add(new Label() { Text = "Estimation", Dock = DockStyle.Fill, Anchor = AnchorStyles.None, TextAlign = ContentAlignment.MiddleCenter }, columnIndex++, row);
             tableLayout.Controls.Add(new Label() { Text = "" }, columnIndex++, row);
 
             foreach (KeyValuePair<string, string> productSize in product.getStyleSizes())
@@ -140,11 +140,11 @@ namespace Overcuts_Program
 
                 int estimatedSizeQuantity = (int)(percentage * (double)desiredQuantity);
 
-                tableLayout.Controls.Add(new Label() { Text = estimatedSizeQuantity.ToString() }, columnIndex++, row);
+                tableLayout.Controls.Add(new Label() { Text = estimatedSizeQuantity.ToString(), Dock = DockStyle.Fill, Anchor = AnchorStyles.None, TextAlign = ContentAlignment.MiddleCenter }, columnIndex++, row);
             }
 
 
-            tableLayout.Controls.Add(new Label() { Text = desiredQuantity.ToString() }, columnIndex, row);
+            tableLayout.Controls.Add(new Label() { Text = desiredQuantity.ToString(), Dock = DockStyle.Fill, Anchor = AnchorStyles.None, TextAlign = ContentAlignment.MiddleCenter }, columnIndex, row);
         }
 
     }

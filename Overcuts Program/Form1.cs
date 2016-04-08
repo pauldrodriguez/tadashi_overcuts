@@ -49,6 +49,12 @@ namespace Overcuts_Program
             helpButton.FlatStyle = FlatStyle.Flat;
 
             this.WindowState = FormWindowState.Maximized;
+
+            orderFrom.Format = DateTimePickerFormat.Custom;
+            orderFrom.CustomFormat = "MMMM dd, yyyy";
+            
+            orderTo.Format = DateTimePickerFormat.Custom;
+            orderTo.CustomFormat = "MMMM dd, yyyy";
         }
 
         private string validateInput() {
@@ -147,6 +153,7 @@ namespace Overcuts_Program
                 rectangle.Inflate(-1, -1);
 
                 ControlPaint.DrawBorder(e.Graphics, rectangle, Color.Red, ButtonBorderStyle.Dotted); // dotted border
+             
             }
         }
 

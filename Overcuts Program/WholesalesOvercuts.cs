@@ -34,7 +34,7 @@ namespace Overcuts_Program
 
         public override void getOvercuts(String productCode, String colorCode, String orderFrom = "", String orderTo = "")
         {
-            String query = buildQueryInvoice(productCode, colorCode, orderFrom, orderTo);
+            String query = buildQueryOrder(productCode, colorCode, orderFrom, orderTo);
 
             try
             {
@@ -88,7 +88,7 @@ namespace Overcuts_Program
            "SUM(A.SZ074E) AS SIZE12,SUM(A.SZ084E) AS SIZE14,SUM(A.SZ094E) AS SIZE16,SUM(A.SZ104E) AS SIZE18,SUM(A.SZ114E) AS SIZE20,SUM(A.SZ124E) AS BULK," +
            "SUM(A.UNIT4E) AS UNITSTOTAL " +
            "FROM ORDDTL0 AS A LEFT JOIN ORDHDR0 AS B ON A.CONO4E=B.CONO2Y AND A.CSNO4E=B.CSNO2Y AND A.ORNO4E = B.ORNO2Y " +
-           "WHERE A.CONO4E=1 AND A.CSNO4E<>777 AND A.PRCD4E='" + productCode.ToUpper() + "' AND A.CRCD4E='" + colorCode.ToUpper() + "'";
+           "WHERE A.CSNO4E<>777 AND A.PRCD4E='" + productCode.ToUpper() + "' AND A.CRCD4E='" + colorCode.ToUpper() + "'";
             if (orderFrom != "")
             {
                 query += " AND B.ORDT2Y>=" + orderFrom;
@@ -128,7 +128,7 @@ namespace Overcuts_Program
             int columnIndex = 0;
             foreach (KeyValuePair<string, string> product in this.overcutvalues)
             {
-                tableLayout.Controls.Add(new Label() { Text = product.Value }, columnIndex++, row);
+                tableLayout.Controls.Add(new Label() { Text = product.Value, Dock = DockStyle.Fill, Anchor = AnchorStyles.None, TextAlign = ContentAlignment.MiddleCenter }, columnIndex++, row);
             }
         }
 
@@ -137,7 +137,7 @@ namespace Overcuts_Program
           
             int desiredQuantity = Overcuts.product.getDesiredQuantity();
             int colIndex = 0;
-            tableLayout.Controls.Add(new Label() { Text = "Estimation" }, colIndex++, row);
+            tableLayout.Controls.Add(new Label() { Text = "Estimation", Dock = DockStyle.Fill, Anchor = AnchorStyles.None, TextAlign = ContentAlignment.MiddleCenter }, colIndex++, row);
             tableLayout.Controls.Add(new Label() { Text = "" }, colIndex++, row);
             for (int index = 0; index <= 22; index += 2)
             {
@@ -154,10 +154,10 @@ namespace Overcuts_Program
 
                 int estimatedSizeQuantity = (int)(percentage * (double)desiredQuantity);
 
-                tableLayout.Controls.Add(new Label() { Text = estimatedSizeQuantity.ToString() }, colIndex++, row);
+                tableLayout.Controls.Add(new Label() { Text = estimatedSizeQuantity.ToString(), Dock = DockStyle.Fill, Anchor = AnchorStyles.None, TextAlign = ContentAlignment.MiddleCenter }, colIndex++, row);
 
             }
-            tableLayout.Controls.Add(new Label() { Text = desiredQuantity.ToString() }, colIndex, row);
+            tableLayout.Controls.Add(new Label() { Text = desiredQuantity.ToString(), Dock = DockStyle.Fill, Anchor = AnchorStyles.None, TextAlign = ContentAlignment.MiddleCenter }, colIndex, row);
         }
 
     }
