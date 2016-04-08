@@ -7,3 +7,4 @@ c:\users\paulr\documents\visual studio 2012\Projects\Overcuts Program\Overcuts P
 c:\users\paulr\documents\visual studio 2012\Projects\Overcuts Program\Overcuts Program\obj\Debug\Overcuts Program.csproj.GenerateResource.Cache
 c:\users\paulr\documents\visual studio 2012\Projects\Overcuts Program\Overcuts Program\obj\Debug\Overcuts Program.exe
 c:\users\paulr\documents\visual studio 2012\Projects\Overcuts Program\Overcuts Program\obj\Debug\Overcuts Program.pdb
+C:\Users\paulr\Documents\Visual Studio 2012\Projects\Overcuts Program\Overcuts Program\obj\Debug\Overcuts_Program.Help.resources

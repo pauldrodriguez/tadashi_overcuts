@@ -37,6 +37,7 @@
             this.label3 = new System.Windows.Forms.Label();
             this.orderFrom = new System.Windows.Forms.DateTimePicker();
             this.orderTo = new System.Windows.Forms.DateTimePicker();
+            this.button1 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // submitOvercuts
@@ -114,11 +115,22 @@
             this.orderTo.Size = new System.Drawing.Size(200, 20);
             this.orderTo.TabIndex = 8;
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(976, 49);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 9;
+            this.button1.Text = "HELP";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click_2);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1084, 734);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.orderTo);
             this.Controls.Add(this.orderFrom);
             this.Controls.Add(this.label3);
@@ -129,7 +141,7 @@
             this.Controls.Add(this.styleInput);
             this.Controls.Add(this.submitOvercuts);
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "Overcuts Software (Tadashi)";
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -146,6 +158,7 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.DateTimePicker orderFrom;
         private System.Windows.Forms.DateTimePicker orderTo;
+        private System.Windows.Forms.Button button1;
     }
 }
 

@@ -30,7 +30,6 @@ namespace Overcuts_Program
             label.Location = new System.Drawing.Point(xPos, yPos);
             label.Font = new Font("Arial", 18, FontStyle.Bold);
             label.AutoSize = true;
-
             form.Controls.Add(label);
         }
 
@@ -46,6 +45,10 @@ namespace Overcuts_Program
         public string getLabelText()
         {
             return this.labelText;
+        }
+
+        public int getTotalUnits() {
+            return this.totalUnits;
         }
 
         public bool hasRows() {

@@ -48,7 +48,7 @@ namespace Overcuts_Program
             tableLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 30F));
         }
 
-        private void addTopSizes(TableLayoutPanel tableLayout)
+        private void addHeader(TableLayoutPanel tableLayout)
         {
             int row = 0;
             int columnIndex = 0;
@@ -67,7 +67,7 @@ namespace Overcuts_Program
             try
             {
                 overcut.removePanel(this.form);
-
+               
                 if (!overcut.hasRows())
                 {
                     return this;
@@ -83,7 +83,7 @@ namespace Overcuts_Program
                 
                 this.createColumns(tableLayoutPanel1);
 
-                this.addTopSizes(tableLayoutPanel1);
+                this.addHeader(tableLayoutPanel1);
 
                 overcut.incrementRowCount();
                 overcut.setTableLayoutSizes(tableLayoutPanel1);

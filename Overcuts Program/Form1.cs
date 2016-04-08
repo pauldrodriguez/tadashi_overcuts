@@ -73,13 +73,17 @@ namespace Overcuts_Program
             EcommOvercuts ecomm = new EcommOvercuts();
             WholesalesOvercuts wholesale = new WholesalesOvercuts();
             RetailOvercuts retail = new RetailOvercuts();
+            
 
             ecomm.getOvercuts(styleCode, colorCode, orderFromS, orderToS);
             wholesale.getOvercuts(styleCode, colorCode, orderFromS, orderToS);
             retail.getOvercuts(styleCode, colorCode, orderFromDate, orderToDate);
 
+            EcommRetailOvercuts ecommRetail = new EcommRetailOvercuts(ecomm, retail);
+
+
             DrawOvercuts draw = new DrawOvercuts(this.form);
-            draw.drawOvercuts(ecomm).drawOvercuts(wholesale).drawOvercuts(retail);
+            draw.drawOvercuts(ecommRetail).drawOvercuts(ecomm).drawOvercuts(wholesale).drawOvercuts(retail);
 
             /*int xPos = 49;
             int yPos = 90;
@@ -366,6 +370,17 @@ namespace Overcuts_Program
         private void button1_Click_1(object sender, EventArgs e)
         {
 
+        }
+
+        private void openFileDialog1_FileOk(object sender, CancelEventArgs e)
+        {
+
+        }
+
+        private void button1_Click_2(object sender, EventArgs e)
+        {
+            Help helpWindow = new Help();
+            helpWindow.Show();
         }
     }
 }
