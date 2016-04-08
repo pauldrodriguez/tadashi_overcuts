@@ -1,4 +1,9 @@
-﻿using System;
+﻿/**
+ * Author: Paul Rodriguez
+ * @copyright Tadashi Shoji & Associates, Inc.
+ **/
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,11 +19,21 @@ namespace Overcuts_Program
         protected Form1 form = null;
         protected int xPos;
         protected int yPos;
+        protected int tableWidth;
+        protected int tableHeight;
+        protected int tableOffset;
 
         public DrawOvercuts(Form1 form) {
             this.form = form;
             this.xPos = 49;
             this.yPos = 90;
+            this.tableWidth = 700;
+            this.tableHeight = 90;
+            this.tableOffset = 20;
+        }
+
+        private int getNextTableYPosition() {
+            return this.tableHeight + this.tableOffset;
         }
 
         private void createColumns(TableLayoutPanel tableLayout)
@@ -26,19 +41,19 @@ namespace Overcuts_Program
             tableLayout.ColumnCount = 15;
             tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 9F));
             tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 9F));
-            tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F));
-            tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F));
-            tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F));
-            tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F));
-            tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F));
-            tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F));
-            tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F));
-            tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F));
-            tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F));
-            tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F));
-            tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F));
-            tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F));
-            tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F));
+            tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 6F));
+            tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 6F));
+            tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 6F));
+            tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 6F));
+            tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 6F));
+            tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 6F));
+            tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 6F));
+            tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 6F));
+            tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 6F));
+            tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 6F));
+            tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 6F));
+            tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 6F));
+            tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 9F));
         }
 
         private void createRows(TableLayoutPanel tableLayout) {
@@ -95,14 +110,14 @@ namespace Overcuts_Program
                 tableLayoutPanel1.Name = overcut.getTableName();
                 this.createRows(tableLayoutPanel1);
                
-                tableLayoutPanel1.Size = new System.Drawing.Size(688, 90);
+                tableLayoutPanel1.Size = new System.Drawing.Size(this.tableWidth, this.tableHeight);
                 tableLayoutPanel1.TabIndex = 0;
            
                 this.form.Controls.Add(tableLayoutPanel1);
                 tableLayoutPanel1.ResumeLayout(false);
                 tableLayoutPanel1.PerformLayout();
 
-                this.yPos += 110;
+                this.yPos += this.getNextTableYPosition();
             }
             catch (Exception e)
             {

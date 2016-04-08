@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.submitOvercuts = new System.Windows.Forms.Button();
             this.styleInput = new System.Windows.Forms.TextBox();
             this.colorInput = new System.Windows.Forms.TextBox();
@@ -37,17 +38,20 @@
             this.label3 = new System.Windows.Forms.Label();
             this.orderFrom = new System.Windows.Forms.DateTimePicker();
             this.orderTo = new System.Windows.Forms.DateTimePicker();
-            this.button1 = new System.Windows.Forms.Button();
+            this.helpButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // submitOvercuts
             // 
-            this.submitOvercuts.Location = new System.Drawing.Point(845, 49);
+            this.submitOvercuts.BackColor = System.Drawing.Color.LawnGreen;
+            this.submitOvercuts.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.submitOvercuts.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.submitOvercuts.Location = new System.Drawing.Point(840, 34);
             this.submitOvercuts.Name = "submitOvercuts";
-            this.submitOvercuts.Size = new System.Drawing.Size(96, 23);
+            this.submitOvercuts.Size = new System.Drawing.Size(130, 42);
             this.submitOvercuts.TabIndex = 0;
-            this.submitOvercuts.Text = "Get Overcuts";
-            this.submitOvercuts.UseVisualStyleBackColor = true;
+            this.submitOvercuts.Text = "GET OVERCUTS";
+            this.submitOvercuts.UseVisualStyleBackColor = false;
             this.submitOvercuts.Click += new System.EventHandler(this.button1_Click);
             // 
             // styleInput
@@ -115,22 +119,24 @@
             this.orderTo.Size = new System.Drawing.Size(200, 20);
             this.orderTo.TabIndex = 8;
             // 
-            // button1
+            // helpButton
             // 
-            this.button1.Location = new System.Drawing.Point(976, 49);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 9;
-            this.button1.Text = "HELP";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click_2);
+            this.helpButton.BackColor = System.Drawing.SystemColors.Info;
+            this.helpButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.helpButton.Location = new System.Drawing.Point(1020, 33);
+            this.helpButton.Name = "helpButton";
+            this.helpButton.Size = new System.Drawing.Size(75, 40);
+            this.helpButton.TabIndex = 9;
+            this.helpButton.Text = "HELP";
+            this.helpButton.UseVisualStyleBackColor = false;
+            this.helpButton.Click += new System.EventHandler(this.button1_Click_2);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1084, 734);
-            this.Controls.Add(this.button1);
+            this.ClientSize = new System.Drawing.Size(1215, 734);
+            this.Controls.Add(this.helpButton);
             this.Controls.Add(this.orderTo);
             this.Controls.Add(this.orderFrom);
             this.Controls.Add(this.label3);
@@ -140,8 +146,10 @@
             this.Controls.Add(this.colorInput);
             this.Controls.Add(this.styleInput);
             this.Controls.Add(this.submitOvercuts);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Form1";
             this.Text = "Overcuts Software (Tadashi)";
+            this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -158,7 +166,7 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.DateTimePicker orderFrom;
         private System.Windows.Forms.DateTimePicker orderTo;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button helpButton;
     }
 }
 

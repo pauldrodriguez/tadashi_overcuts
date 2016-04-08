@@ -1,4 +1,9 @@
-﻿using System;
+﻿/**
+ * Author: Paul Rodriguez
+ * @copyright Tadashi Shoji & Associates, Inc.
+ **/
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -39,295 +44,93 @@ namespace Overcuts_Program
 
             this.initializeHeaderRows();
             form = this;
+
+            submitOvercuts.FlatStyle = FlatStyle.Flat;
+            helpButton.FlatStyle = FlatStyle.Flat;
+
+            this.WindowState = FormWindowState.Maximized;
         }
 
+        private string validateInput() {
+            string errorMessages = "";
+        
+            if (styleInput.Text.ToString() == "")
+            {
+                errorMessages += "you must Enter a product code\n";
+              
+            }
+            if (colorInput.Text.ToString() == "")
+            {
+                errorMessages += "you must Enter a color code\n";
 
+            }
+            if (unitsInput.Text.ToString() == "")
+            {
+                errorMessages += "you must Enter your desired units\n";
+          
+            }
+            return errorMessages;
+        }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            int desiredQuantity = Int32.Parse(unitsInput.Text.ToString());
-            string styleCode   = styleInput.Text.ToString();
-            string colorCode   = colorInput.Text.ToString();
-            string orderFromS  = orderFrom.Value.Date.ToString("yyyyMMdd");
-            string orderToS    = orderTo.Value.Date.ToString("yyyyMMdd");
-            int currDate       = Int32.Parse(DateTime.Now.ToString("yyyyMMdd"));
 
-            string orderFromDate = orderFrom.Value.Date.ToString("yyyy-MM-dd");
-            string orderToDate = orderFrom.Value.Date.ToString("yyyy-MM-dd");
-
-            if( currDate<=Int32.Parse(orderFromS) ) {
-                orderFromS = "";
-                orderFromDate = "";
-                
-            }
-
-            if ( currDate <= Int32.Parse(orderToS) ) {
-                orderToS = "";
-                orderToDate = "";
-            }
-
-            this.product = new ProductStyles(styleCode,colorCode,desiredQuantity);
-
-            Overcuts.setProduct(this.product);
-
-            EcommOvercuts ecomm = new EcommOvercuts();
-            WholesalesOvercuts wholesale = new WholesalesOvercuts();
-            RetailOvercuts retail = new RetailOvercuts();
-            
-
-            ecomm.getOvercuts(styleCode, colorCode, orderFromS, orderToS);
-            wholesale.getOvercuts(styleCode, colorCode, orderFromS, orderToS);
-            retail.getOvercuts(styleCode, colorCode, orderFromDate, orderToDate);
-
-            EcommRetailOvercuts ecommRetail = new EcommRetailOvercuts(ecomm, retail);
-
-
-            DrawOvercuts draw = new DrawOvercuts(this.form);
-            draw.drawOvercuts(ecommRetail).drawOvercuts(ecomm).drawOvercuts(wholesale).drawOvercuts(retail);
-
-            /*int xPos = 49;
-            int yPos = 90;
-
-            if (ecomm.hasRows())
-            {
-                ecomm.removePanel(this.form);
-                //removePanel("ecommOvercutPanel","ecommOvercutLabel");
-                drawEcommOvercutsTable(ecomm,ref xPos,ref yPos);
-            }
-
-            if (wholesale.hasRows())
-            {
-                yPos += 110;
-                wholesale.removePanel(this.form);
-                //removePanel("wholesaleOvercutPanel","wholesaleOvercutLabel");
-                drawWholesaleOvercutsTable(wholesale,ref xPos, ref yPos);
-            }
-
-            if (retail.hasRows())
-            {
-                yPos += 110;
-                retail.removePanel(this.form);
-                //removePanel("retailOvercutPanel", "retailOvercutLabel");
-                drawRetailOvercutsTable(retail, ref xPos, ref yPos);
-            }*/
-        }
-
-        /*
-        public void removePanel(string panelName,string panelLabelName) {
-            if (this.Controls.OfType<TableLayoutPanel>().FirstOrDefault(l => l.Name == panelName) != null) {
-                this.Controls.Remove(this.Controls.OfType<TableLayoutPanel>().FirstOrDefault(l => l.Name == panelName));
-            }
-            if (this.Controls.OfType<Label>().FirstOrDefault(l => l.Name == panelLabelName) != null)
-            {
-                this.Controls.Remove(this.Controls.OfType<Label>().FirstOrDefault(l => l.Name == panelLabelName));
-            }
-            
-        }
-
-        private void addTopSizes(TableLayoutPanel tableLayout) {
-            int row = 0;
-            tableLayout.Controls.Add(new Label() { Text = "Style" }, 0, row);
-            tableLayout.Controls.Add(new Label() { Text = "Color" }, 1, row);
-            int columnIndex = 2;
-            foreach (KeyValuePair<string, string> productSize in this.product.getStyleSizes()) {
-                tableLayout.Controls.Add(new Label() { Text = productSize.Value }, columnIndex, row);
-                columnIndex++;
-            }
-            tableLayout.Controls.Add(new Label() { Text = "Totals" }, 14, row);
-        }
-
-        private void addHeaderRow(TableLayoutPanel tableLayout,int row)
-        {
-            int columnIndex = 0;
-            foreach (KeyValuePair<string, string> columnName in this.headerColumnNames)
-            {
-                tableLayout.Controls.Add(new Label() { Text = columnName.Value }, columnIndex, row);
-                columnIndex++;
-            }
-        }
-
-        private void createColumnStyles(TableLayoutPanel tableLayout) {
-            tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 9F));
-            tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 9F));
-            tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F));
-            tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F));
-            tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F));
-            tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F));
-            tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F));
-            tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F));
-            tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F));
-            tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F));
-            tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F));
-            tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F));
-            tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F));
-            tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F));
-            tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F));
-        }
-
-        private void drawEcommOvercutsTable(Overcuts overcuts, ref int xPos, ref int yPos) {
             try
             {
-                int desiredQuantity = Int32.Parse(unitsInput.Text.ToString());
-                //label4.Text = unitsToShip.ToString();
 
-                overcuts.drawTableLabel(this.form, xPos, yPos);
-
-                TableLayoutPanel tableLayoutPanel1 = new TableLayoutPanel();
-                tableLayoutPanel1.SuspendLayout();
-
-                yPos += 40;
-
-                // tableLayoutPanel1
-                tableLayoutPanel1.ColumnCount = 15;
-                this.createColumnStyles(tableLayoutPanel1);
-
-                // SIZES ROW
-                this.addTopSizes(tableLayoutPanel1);
-
-                // HEADER ROW
-                //this.addHeaderRow(tableLayoutPanel1,1);
+                string errors = this.validateInput();
+                if (errors != "") {
+                    MessageBox.Show(errors);
+                    return;
+                }
                 
-                // RETURNED VALUES ROW
-                overcuts.incrementRowCount();
-                overcuts.setTableLayoutSizes(tableLayoutPanel1);
-              
-                // ESTIMATION VALUE ROW
-                overcuts.incrementRowCount();
-                overcuts.setTableLayoutEstimateSizes(tableLayoutPanel1);
+                int desiredQuantity = Int32.Parse(unitsInput.Text.ToString());
+                string styleCode = styleInput.Text.ToString();
+                string colorCode = colorInput.Text.ToString();
+                string orderFromS = orderFrom.Value.Date.ToString("yyyyMMdd");
+                string orderToS = orderTo.Value.Date.ToString("yyyyMMdd");
+                int currDate = Int32.Parse(DateTime.Now.ToString("yyyyMMdd"));
 
-                tableLayoutPanel1.Location = new System.Drawing.Point(xPos, yPos);
-                tableLayoutPanel1.Name = "ecommOvercutPanel";
-                tableLayoutPanel1.RowCount = 3;
-                tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 40F));
-                tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 30F));
-                tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 30F));
-                tableLayoutPanel1.Size = new System.Drawing.Size(688, 90);
-                tableLayoutPanel1.TabIndex = 0;
-                //tableLayoutPanel1.CellPaint += new TableLayoutCellPaintEventHandler(tableLayoutPanel1_CellPaint);
+                string orderFromDate = orderFrom.Value.Date.ToString("yyyy-MM-dd");
+                string orderToDate = orderFrom.Value.Date.ToString("yyyy-MM-dd");
 
-                Controls.Add(tableLayoutPanel1);
-                tableLayoutPanel1.ResumeLayout(false);
-                tableLayoutPanel1.PerformLayout();
+                if (currDate <= Int32.Parse(orderFromS))
+                {
+                    orderFromS = "";
+                    orderFromDate = "";
+
+                }
+
+                if (currDate <= Int32.Parse(orderToS))
+                {
+                    orderToS = "";
+                    orderToDate = "";
+                }
+
+                this.product = new ProductStyles(styleCode, colorCode, desiredQuantity);
+
+                Overcuts.setProduct(this.product);
+
+                EcommOvercuts ecomm = new EcommOvercuts();
+                WholesalesOvercuts wholesale = new WholesalesOvercuts();
+                RetailOvercuts retail = new RetailOvercuts();
+
+
+                ecomm.getOvercuts(styleCode, colorCode, orderFromS, orderToS);
+                wholesale.getOvercuts(styleCode, colorCode, orderFromS, orderToS);
+                retail.getOvercuts(styleCode, colorCode, orderFromDate, orderToDate);
+
+                EcommRetailOvercuts ecommRetail = new EcommRetailOvercuts(ecomm, retail);
+
+
+                DrawOvercuts draw = new DrawOvercuts(this.form);
+                draw.drawOvercuts(ecommRetail).drawOvercuts(ecomm).drawOvercuts(wholesale).drawOvercuts(retail);
             }
-            catch (Exception e) {
-                MessageBox.Show(e.ToString());
+            catch (Exception exp) {
+                MessageBox.Show(exp.ToString());
             }
            
         }
-
-
-        private void drawWholesaleOvercutsTable(Overcuts overcuts, ref int xPos, ref int yPos)
-        {
-            try
-            {
-              
-
-                int desiredQuantity = Int32.Parse(unitsInput.Text.ToString());
-
-                overcuts.drawTableLabel(this.form, xPos, yPos);
-                
-
-                TableLayoutPanel tableLayoutPanel1 = new TableLayoutPanel();
-                tableLayoutPanel1.SuspendLayout();
-
-                yPos += 40;
-
-                // tableLayoutPanel1
-                tableLayoutPanel1.ColumnCount = 15;
-                this.createColumnStyles(tableLayoutPanel1);
-
-                // SIZES ROW
-                this.addTopSizes(tableLayoutPanel1);
-
-                // HEADER ROW
-                //this.addHeaderRow(tableLayoutPanel1, 1);
-
-                // RETURNED VALUES ROW
-                overcuts.incrementRowCount();
-                overcuts.setTableLayoutSizes(tableLayoutPanel1);
-
-                // ESTIMATION VALUE ROW
-                overcuts.incrementRowCount();
-                overcuts.setTableLayoutEstimateSizes(tableLayoutPanel1);
-
-                tableLayoutPanel1.Location = new System.Drawing.Point(xPos, yPos);
-                tableLayoutPanel1.Name = "wholesaleOvercutPanel";
-                tableLayoutPanel1.RowCount = 3;
-                tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 40F));
-                tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 30F));
-                tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 30F));
-                tableLayoutPanel1.Size = new System.Drawing.Size(688, 90);
-                tableLayoutPanel1.TabIndex = 0;
-                //tableLayoutPanel1.CellPaint += new TableLayoutCellPaintEventHandler(tableLayoutPanel1_CellPaint);
-
-                Controls.Add(tableLayoutPanel1);
-                tableLayoutPanel1.ResumeLayout(false);
-                tableLayoutPanel1.PerformLayout();
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show(e.ToString());
-            }
-
-        }
-
-        private void drawRetailOvercutsTable(Overcuts overcuts, ref int xPos, ref int yPos)
-        {
-            try
-            {
-             
-                int desiredQuantity = Int32.Parse(unitsInput.Text.ToString());
-                //label4.Text = unitsToShip.ToString();
-                TableLayoutPanel tableLayoutPanel1 = new TableLayoutPanel();
-                Label ecommLabelTable = new Label();
-                ecommLabelTable.Text = "Retail";
-                ecommLabelTable.Name = "retailOvercutLabel";
-                ecommLabelTable.Location = new System.Drawing.Point(xPos, yPos);
-                ecommLabelTable.Font = new Font("Arial", 18, FontStyle.Bold);
-                ecommLabelTable.AutoSize = true;
-                Controls.Add(ecommLabelTable);
-                tableLayoutPanel1.SuspendLayout();
-
-                yPos += 40;
-
-                // tableLayoutPanel1
-                tableLayoutPanel1.ColumnCount = 15;
-                this.createColumnStyles(tableLayoutPanel1);
-
-                // SIZES ROW
-                this.addTopSizes(tableLayoutPanel1);
-
-                // HEADER ROW
-                //this.addHeaderRow(tableLayoutPanel1,1);
-
-                // RETURNED VALUES ROW
-                overcuts.incrementRowCount();
-                overcuts.setTableLayoutSizes(tableLayoutPanel1);
-
-                // ESTIMATION VALUE ROW
-                overcuts.incrementRowCount();
-                overcuts.setTableLayoutEstimateSizes(tableLayoutPanel1);
-
-                tableLayoutPanel1.Location = new System.Drawing.Point(xPos, yPos);
-                tableLayoutPanel1.Name = "retailOvercutPanel";
-                tableLayoutPanel1.RowCount = 3;
-                tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 40F));
-                tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 30F));
-                tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 30F));
-                tableLayoutPanel1.Size = new System.Drawing.Size(688, 90);
-                tableLayoutPanel1.TabIndex = 0;
-                //tableLayoutPanel1.CellPaint += new TableLayoutCellPaintEventHandler(tableLayoutPanel1_CellPaint);
-
-                Controls.Add(tableLayoutPanel1);
-                tableLayoutPanel1.ResumeLayout(false);
-                tableLayoutPanel1.PerformLayout();
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show(e.ToString());
-            }
-
-        }*/
 
         void tableLayoutPanel1_CellPaint(object sender, TableLayoutCellPaintEventArgs e)
         {
@@ -381,6 +184,11 @@ namespace Overcuts_Program
         {
             Help helpWindow = new Help();
             helpWindow.Show();
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

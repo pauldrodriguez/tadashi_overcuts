@@ -1,4 +1,9 @@
-﻿using System;
+﻿/**
+ * Author: Paul Rodriguez
+ * @copyright Tadashi Shoji & Associates, Inc.
+ **/
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -75,7 +80,7 @@ namespace Overcuts_Program
             string query = "SELECT B.SZ013G AS SIZE0,B.SZ023G AS SIZE2,B.SZ033G AS SIZE4,B.SZ043G AS SIZE6,B.SZ053G AS SIZE8,B.SZ063G AS SIZE10," +
                 "B.SZ073G AS SIZE12,B.SZ083G AS SIZE14,B.SZ093G AS SIZE16,B.SZ103G AS SIZE18,B.SZ113G AS SIZE20,B.SZ123G AS BULK " +
                 "FROM PRHDMS0 AS A LEFT JOIN SZSCMS0 AS B ON A.SZCD3K=B.SZCD3G AND A.CONO3K=B.CONO3G " +
-                "WHERE A.CONO3K=1 AND A.PRCD3K='"+this.styleCode+"'";
+                "WHERE A.CONO3K=1 AND A.PRCD3K='" + this.styleCode.ToUpper() +"'";
 
             try
             {

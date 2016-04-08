@@ -1,4 +1,9 @@
-﻿using System;
+﻿/**
+ * Author: Paul Rodriguez
+ * @copyright Tadashi Shoji & Associates, Inc.
+ **/
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -79,9 +84,15 @@ namespace Overcuts_Program
                 {
                     sizekey += "BULK";
                 }
-                tableLayout.Controls.Add(new Label() { Text = this.overcutvalues[sizekey] }, columnIndex++, row);
+                string sizeVal = "";
+               
+                this.overcutvalues.TryGetValue(sizekey, out sizeVal);
+
+                tableLayout.Controls.Add(new Label() { Text = sizeVal }, columnIndex++, row);
             }
-            tableLayout.Controls.Add(new Label() { Text = this.overcutvalues["UNITSTOTAL"] }, columnIndex++, row);
+            string total = "";
+            this.overcutvalues.TryGetValue("UNITSTOTAL",out total);
+            tableLayout.Controls.Add(new Label() { Text = total}, columnIndex++, row);
            
         }
 
@@ -103,7 +114,10 @@ namespace Overcuts_Program
                 {
                     sizekey += "BULK";
                 }
-                double percentage = (double)this.unitsBySize[sizekey] / (double)this.totalUnits;
+
+                int qtySold = 0;
+                this.unitsBySize.TryGetValue(sizekey, out qtySold);
+                double percentage = (double)qtySold/ (double)this.totalUnits;
 
                 int estimatedSizeQuantity = (int)(percentage * (double)desiredQuantity);
 
